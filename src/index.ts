@@ -17,8 +17,7 @@ app.get("/", (_req, res) => {
 app.get("/restart", (req, res, next) => {
   const { key } = req.query as { key: string };
   if (key !== process.env.WEBHOOK_KEY) {
-    next(new Error("invalid key"));
-    return;
+    return next(new Error("invalid key"));
   }
   console.log("restarting...");
   res.json({
