@@ -10,6 +10,7 @@ const port = 8080;
 app.get("/", (_req, res) => {
   res.json({
     message: "안녕 아리스!",
+    version: "0.0.2",
   });
 });
 
