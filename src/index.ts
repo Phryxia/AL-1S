@@ -1,6 +1,6 @@
 import "dotenv/config";
-import express, { NextFunction } from "express";
-import type { Request, Response } from "express";
+import express from "express";
+import type { Request, Response, NextFunction } from "express";
 import { spawn } from "child_process";
 
 const app = express();
