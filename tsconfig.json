@@ -7,6 +7,6 @@
     "moduleResolution": "node",
     "target": "ES5"
   },
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "typings.d.ts", "index.ts"],
   "exclude": ["node_modules", "dist"]
 }

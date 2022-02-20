@@ -1,10 +1,39 @@
-import express from "express";
+import "dotenv/config";
+import express, { NextFunction } from "express";
+import type { Request, Response } from "express";
+import { spawn } from "child_process";
 
 const app = express();
+app.use(express.json());
 const port = 8080;
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.send("hello al-1s!");
+});
+
+app.get("/restart", (req, res, next) => {
+  const { key } = req.query as { key: string };
+  if (key !== process.env.WEBHOOK_KEY) {
+    next(new Error("invalid key"));
+    return;
+  }
+
+  res.json({
+    status: "server restarted",
+  });
+  spawn("pm2", ["restart"]).on("error", (err) => {
+    {
+      console.error("spawn error", err);
+    }
+  });
+});
+
+// error 처리 로직
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  res.status(500).json({
+    error: "Internal Server Error",
+    message: err.message,
+  });
 });
 
 app.listen(port, () => {
