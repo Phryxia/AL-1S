@@ -8,7 +8,9 @@ app.use(express.json());
 const port = 8080;
 
 app.get("/", (_req, res) => {
-  res.send("hello al-1s!");
+  res.json({
+    message: "안녕 아리스!",
+  });
 });
 
 app.get("/restart", (req, res, next) => {
@@ -17,11 +19,11 @@ app.get("/restart", (req, res, next) => {
     next(new Error("invalid key"));
     return;
   }
-
+  console.log("restarting...");
   res.json({
     status: "server restarted",
   });
-  spawn("pm2", ["restart"]).on("error", (err) => {
+  spawn("pm2", ["reload", "AL-1S"]).on("error", (err) => {
     {
       console.error("spawn error", err);
     }
