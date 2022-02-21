@@ -1,4 +1,7 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config({
+  path: `.credential.env`,
+});
 import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import { spawn } from "child_process";
@@ -6,20 +9,31 @@ import { spawn } from "child_process";
 const app = express();
 app.use(express.json());
 const port = 8080;
+let isDisableKeepAlive = false;
 
-app.get("/", (_req, res) => {
+app.use((_, res, next) => {
+  if (isDisableKeepAlive) {
+    res.set("Connection", "close");
+  }
+  next();
+});
+
+app.get("/", (req, res) => {
   res.json({
     message: "안녕 아리스!",
-    version: "0.0.2",
+    version: "0.0.4",
+    ip: req.headers["x-forwarded-for"] || req.ip,
   });
 });
 
-app.get("/restart", (req, res, next) => {
-  const { key } = req.query as { key: string };
+app.put("/restart", (req, res) => {
+  const { key } = req.body as { key: string };
   if (key !== process.env.WEBHOOK_KEY) {
-    return next(new Error("invalid key"));
+    return res.status(403).json({
+      message: "invalid key",
+    });
   }
-  console.log("restarting...");
+
   res.json({
     status: "server restarted",
   });
@@ -34,10 +48,20 @@ app.get("/restart", (req, res, next) => {
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   res.status(500).json({
     error: "Internal Server Error",
-    message: err.message,
+    message: err?.message ?? "",
+    stack: err?.stack ?? "",
   });
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
+  process.send("ready");
   console.log(`AL-1S is on listening on ${port}`);
+});
+
+process.on("SIGINT", () => {
+  isDisableKeepAlive = true;
+  server.close(() => {
+    console.log("아리스는 잠에 빠졌습니다.");
+    process.exit(0);
+  });
 });
