@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "express": "^4.17.3",
-    "node-telegram-bot-api": "^0.56.0"
+    "node-telegram-bot-api": "^0.56.0",
+    "dotenv": "^16.0.0"
   },
   "scripts": {
     "build": "webpack build --mode=production",
