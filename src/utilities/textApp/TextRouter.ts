@@ -4,11 +4,13 @@ import type {
   TextRouterCondition,
 } from "./shared";
 
+interface SubRouterDetail {
+  condition: TextRouterCondition;
+  subRouter: TextRouter;
+}
+
 export class TextRouter {
-  protected subRouters: {
-    condition: TextRouterCondition;
-    router: TextRouter;
-  }[] = [];
+  protected subRouters: SubRouterDetail[] = [];
 
   public constructor(private callback?: TextRouterCallback) {}
 
@@ -17,7 +19,7 @@ export class TextRouter {
     condition이 RegExp인 경우, 해당 패턴 이외에는 전부 remainText로 매칭
   */
   public use(condition: TextRouterCondition, subRouter: TextRouter): void {
-    this.subRouters.push({ condition, router: subRouter });
+    this.subRouters.push({ condition, subRouter });
   }
 
   public run(context: TextRouterContext): boolean {
@@ -36,7 +38,7 @@ export class TextRouter {
           remainText: remain,
         };
 
-        return router.run(subContext);
+        return subRouter.run(subContext);
       },
       false
     );
