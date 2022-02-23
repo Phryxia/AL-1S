@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "esModuleInterop": true,
-    "module": "CommonJS",
+    "module": "ES6",
     "moduleResolution": "node",
-    "target": "ES5"
+    "target": "ES6",
+    "paths": {
+      "@src/*": ["./src/*"]
+    }
   },
   "include": ["./src/**/*.ts", "typings.d.ts"],
   "exclude": ["node_modules", "dist"]

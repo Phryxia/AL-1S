@@ -3,6 +3,7 @@ dotenv.config({
   path: `.credential.env`,
 });
 import express from "express";
+import TelegramBotService from "./service";
 import type { Request, Response, NextFunction } from "express";
 import { spawn } from "child_process";
 
@@ -65,3 +66,5 @@ process.on("SIGINT", () => {
     process.exit(0);
   });
 });
+
+TelegramBotService.init();

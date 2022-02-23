@@ -1,3 +1,5 @@
+const path = require("path");
+
 /** @type {import('webpack').Configuration} */
 module.exports = {
   entry: "./src/index.ts",
@@ -14,6 +16,9 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".js"],
+    alias: {
+      "@src": path.resolve(__dirname, "./src"),
+    },
   },
   target: ["node12.20"],
 };
