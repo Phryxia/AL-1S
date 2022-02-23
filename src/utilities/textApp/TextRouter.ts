@@ -21,11 +21,10 @@ export class TextRouter {
   }
 
   public run(context: TextRouterContext): boolean {
+    const { remainText, currentPath } = context;
     const isSubMatched = this.subRouters.reduce(
-      (isMatched, { condition, router }) => {
+      (isMatched, { condition, subRouter }) => {
         if (isMatched) return true;
-
-        const { remainText, currentPath } = context;
         const [, matchedText, remain = ""] =
           TextRouter.match(remainText, condition) ?? [];
 
