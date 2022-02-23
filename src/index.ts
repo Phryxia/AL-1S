@@ -1,12 +1,11 @@
 import dotenv from "dotenv";
+dotenv.config({
+  path: `.credential.env`,
+});
 import express from "express";
 import TelegramBotService from "./service";
 import type { Request, Response, NextFunction } from "express";
 import { spawn } from "child_process";
-
-dotenv.config({
-  path: `.credential.env`,
-});
 
 const app = express();
 app.use(express.json());
