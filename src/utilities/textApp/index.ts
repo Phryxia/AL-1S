@@ -1,3 +1,3 @@
-export * from "./shared";
-export * from "./TextRouter";
-export * from "./TextApp";
+export * from './shared'
+export * from './TextRouter'
+export * from './TextApp'

@@ -1,24 +1,24 @@
-const path = require("path");
+const path = require('path')
 
 /** @type {import('webpack').Configuration} */
 module.exports = {
-  entry: "./src/index.ts",
+  entry: './src/index.ts',
   output: {
-    filename: "index.js",
+    filename: 'index.js',
   },
   module: {
     rules: [
       {
         test: /\.ts$/,
-        loader: "swc-loader",
+        loader: 'swc-loader',
       },
     ],
   },
   resolve: {
-    extensions: [".ts", ".js"],
+    extensions: ['.ts', '.js'],
     alias: {
-      "@src": path.resolve(__dirname, "./src"),
+      '@src': path.resolve(__dirname, './src'),
     },
   },
-  target: ["node12.20"],
-};
+  target: ['node12.20'],
+}
