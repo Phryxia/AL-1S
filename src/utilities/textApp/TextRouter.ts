@@ -1,3 +1,4 @@
+import { escapeRegExp } from '@src/utilities/strings'
 import type { TextRouterContext, TextRouterCallback, TextRouterCondition } from './shared'
 
 interface SubRouterDetail {
@@ -50,7 +51,7 @@ export class TextRouter {
     if (condition instanceof RegExp) {
       innerRegExpInString = condition.toString().match(/\/(.*)\/.*/)[1]
     } else {
-      innerRegExpInString = TextRouter.escape(condition)
+      innerRegExpInString = escapeRegExp(condition)
     }
 
     const regexp = new RegExp(`(${innerRegExpInString})(?:\\s+(.+))?`)
