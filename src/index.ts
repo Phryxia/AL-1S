@@ -1,7 +1,8 @@
 import express from 'express'
-import TelegramBotService from './service'
+import TelegramBotService from './service/telegram'
 import type { Request, Response, NextFunction } from 'express'
 import { spawn } from 'child_process'
+import { getDb } from './service/repository'
 
 const app = express()
 app.use(express.json())
@@ -51,7 +52,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 })
 
 const server = app.listen(port, () => {
-  process.send('ready')
+  // process.send('ready')
   console.log(`AL-1S is on listening on ${port}`)
 })
 
@@ -62,5 +63,11 @@ process.on('SIGINT', () => {
     process.exit(0)
   })
 })
-
-TelegramBotService.init()
+;(async () => {
+  try {
+    await getDb()
+    TelegramBotService.init()
+  } catch (e) {
+    console.error(e)
+  }
+})()
