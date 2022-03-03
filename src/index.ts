@@ -52,7 +52,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 })
 
 const server = app.listen(port, () => {
-  // process.send('ready')
+  process.send('ready')
   console.log(`AL-1S is on listening on ${port}`)
 })
 
