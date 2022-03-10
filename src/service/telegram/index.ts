@@ -7,8 +7,7 @@ function init(): void {
   const token = process.env.TELEGRAM_BOT_TOKEN
 
   if (!token) {
-    console.error('TELEGRAM_BOT_TOKEN is not provided to env')
-    return
+    throw new Error('TELEGRAM_BOT_TOKEN is not provided to env')
   }
 
   const bot = new TelegramBot(token, { polling: true })

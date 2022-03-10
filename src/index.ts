@@ -1,11 +1,8 @@
-import dotenv from 'dotenv'
-dotenv.config({
-  path: `.credential.env`,
-})
 import express from 'express'
-import TelegramBotService from './service'
+import TelegramBotService from './service/telegram'
 import type { Request, Response, NextFunction } from 'express'
 import { spawn } from 'child_process'
+import { getDb } from './service/repository'
 
 const app = express()
 app.use(express.json())
@@ -66,5 +63,11 @@ process.on('SIGINT', () => {
     process.exit(0)
   })
 })
-
-TelegramBotService.init()
+;(async () => {
+  try {
+    await getDb()
+    TelegramBotService.init()
+  } catch (e) {
+    console.error(e)
+  }
+})()
