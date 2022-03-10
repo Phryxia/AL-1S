@@ -1,8 +1,10 @@
 const path = require('path')
+const nodeExternals = require('webpack-node-externals')
 
 /** @type {import('webpack').Configuration} */
 module.exports = {
   entry: './src/index.ts',
+  devtool: 'source-map',
   output: {
     filename: 'index.js',
   },
@@ -10,7 +12,12 @@ module.exports = {
     rules: [
       {
         test: /\.ts$/,
-        loader: 'swc-loader',
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'ts',
+          target: 'esnext',
+        },
+        exclude: /node_modules/,
       },
     ],
   },
@@ -20,5 +27,7 @@ module.exports = {
       '@src': path.resolve(__dirname, './src'),
     },
   },
-  target: ['node12.20'],
+  target: ['node17'],
+  externalsPresets: { node: true },
+  externals: [nodeExternals()],
 }
