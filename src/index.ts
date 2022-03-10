@@ -1,48 +1,20 @@
 import express from 'express'
 import TelegramBotService from './service/telegram'
 import type { Request, Response, NextFunction } from 'express'
-import { spawn } from 'child_process'
 import { getDb } from './service/repository'
 
 const app = express()
 app.use(express.json())
 const port = 8080
-let isDisableKeepAlive = false
-
-app.use((_, res, next) => {
-  if (isDisableKeepAlive) {
-    res.set('Connection', 'close')
-  }
-  next()
-})
 
 app.get('/', (req, res) => {
   res.json({
     message: '안녕 아리스!',
-    version: '0.0.4',
+    version: '0.0.5',
     ip: req.headers['x-forwarded-for'] || req.ip,
   })
 })
 
-app.put('/restart', (req, res) => {
-  const { key } = req.body as { key: string }
-  if (key !== process.env.WEBHOOK_KEY) {
-    return res.status(403).json({
-      message: 'invalid key',
-    })
-  }
-
-  res.json({
-    status: 'server restarted',
-  })
-  spawn('pm2', ['reload', 'AL-1S']).on('error', (err) => {
-    {
-      console.error('spawn error', err)
-    }
-  })
-})
-
-// error 처리 로직
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   res.status(500).json({
     error: 'Internal Server Error',
@@ -51,17 +23,8 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   })
 })
 
-const server = app.listen(port, () => {
-  process.send('ready')
+app.listen(port, () => {
   console.log(`AL-1S is on listening on ${port}`)
-})
-
-process.on('SIGINT', () => {
-  isDisableKeepAlive = true
-  server.close(() => {
-    console.log('아리스는 잠에 빠졌습니다.')
-    process.exit(0)
-  })
 })
 ;(async () => {
   try {
