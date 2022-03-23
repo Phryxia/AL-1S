@@ -1,7 +1,0 @@
-{
-  "verbose": true,
-  "ignore": ["node_modules"],
-  "execMap": {
-    "js": "node -r dotenv/config ./dist/index.js dotenv_config_path=develop.credential.env"
-  }
-}

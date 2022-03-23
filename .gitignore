@@ -3,3 +3,5 @@ dist
 *.credential.*
 yarn-error.log
 coverage
+.yarn
+.yarnrc

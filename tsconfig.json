@@ -3,7 +3,7 @@
     "allowJs": true,
     "baseUrl": ".",
     "esModuleInterop": true,
-    "module": "ES6",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "target": "ES6",
     "paths": {
