@@ -1,12 +1,14 @@
 import type TelegramBot from 'node-telegram-bot-api'
+import ArisServices from '@src/arisServices'
 import { ArisResponse } from '@src/types/arisResponse'
-import { Context, ContextState } from '@src/types/context'
+import { ArisContext } from '@src/types/context'
+import { routeMessage } from './routeMessage'
 
 // 유저가 물고있는 컨텍스트에 관련된 정보
 interface ContextActivation {
   chatId: TelegramBot.ChatId
   userId: TelegramBot.User['id']
-  context: Context
+  context: ArisContext
   currentStateId: number
 }
 
@@ -38,14 +40,24 @@ function findActivatedContext(message: TelegramBot.Message): ContextActivation |
   )
 }
 
-export function decideContext(message: TelegramBot.Message): ArisResponse {
-  if (!isUserMessage(message)) return {}
+export async function runArisService(message: TelegramBot.Message): Promise<ArisResponse> {
+  if (!isUserMessage(message)) return null
 
   const activatedContext = findActivatedContext(message)
 
   if (activatedContext) {
     return processContext(message, activatedContext)
   }
-  // wip: TextApp
-  return {}
+
+  const tokens = message.text?.split(' ').filter((s) => s) ?? []
+
+  return routeMessage(
+    {
+      message,
+      tokens,
+      currentIndex: -1,
+      currentToken: tokens[0] ?? '',
+    },
+    ArisServices,
+  )
 }

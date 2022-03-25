@@ -1,7 +1,5 @@
 import TelegramBot from 'node-telegram-bot-api'
-import { TextApp } from '@src/utilities'
-import birthRouter from './birth'
-import debugRouter from './debug'
+import { runArisService } from '@src/apps/runArisService'
 
 function init(): void {
   const token = process.env.TELEGRAM_BOT_TOKEN
@@ -12,9 +10,14 @@ function init(): void {
 
   const bot = new TelegramBot(token, { polling: true })
 
-  const app = new TextApp(bot)
-  app.use('birth', birthRouter)
-  app.use('debug', debugRouter)
+  bot.on('message', async (message) => {
+    const response = await runArisService(message)
+
+    if (response?.text) {
+      bot.sendMessage(message.chat.id, response.text)
+      return
+    }
+  })
 }
 
 export default {

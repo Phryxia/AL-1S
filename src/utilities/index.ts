@@ -1,1 +1,1 @@
-export * from './textApp'
+export * from './strings'

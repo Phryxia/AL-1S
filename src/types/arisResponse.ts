@@ -1,3 +1,3 @@
-export interface ArisResponse {
+export type ArisResponse = {
   text?: string
-}
+} | null
