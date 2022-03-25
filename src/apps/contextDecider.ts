@@ -13,7 +13,7 @@ interface ContextActivation {
 const activatedContexts: ContextActivation[] = []
 
 function isUserMessage(message: TelegramBot.Message): boolean {
-  return message.from && !message.from.is_bot
+  return !!message.from && !message.from.is_bot
 }
 
 function processContext(
@@ -29,21 +29,23 @@ function processContext(
   if (availableTransition) {
     return availableTransition.onTransition(message)
   }
-  currentState.defaultTransition.onTransition(message)
+  return currentState.defaultTransition.onTransition(message)
 }
 
 function findActivatedContext(message: TelegramBot.Message): ContextActivation | undefined {
   return activatedContexts.find(
-    ({ chatId, userId }) => chatId === message.chat.id && userId === message.from.id,
+    ({ chatId, userId }) => chatId === message.chat.id && userId === message.from?.id,
   )
 }
 
 export function decideContext(message: TelegramBot.Message): ArisResponse {
-  if (!isUserMessage(message)) return null
+  if (!isUserMessage(message)) return {}
 
   const activatedContext = findActivatedContext(message)
 
   if (activatedContext) {
     return processContext(message, activatedContext)
   }
+  // wip: TextApp
+  return {}
 }
