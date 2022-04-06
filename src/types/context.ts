@@ -18,3 +18,5 @@ export interface ArisContext<T = {}> {
   states: ArisContextState[]
   store: T
 }
+
+export const TERMINATE_STATE_ID = -1

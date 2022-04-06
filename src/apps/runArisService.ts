@@ -1,6 +1,6 @@
 import ArisServices from '@src/arisServices'
 import { ArisChatId, ArisResponse, ArisUserId, ArisUserRequest } from '@src/types/arisResponse'
-import { ArisContext } from '@src/types/context'
+import { ArisContext, TERMINATE_STATE_ID } from '@src/types/context'
 import { routeMessage } from './routeMessage'
 
 // 유저가 물고있는 컨텍스트에 관련된 정보
@@ -42,7 +42,7 @@ function processContext(message: ArisUserRequest, activation: ContextActivation)
   if (availableTransition) {
     const nextStateId = availableTransition.toId
 
-    if (nextStateId === -1) {
+    if (nextStateId === TERMINATE_STATE_ID) {
       removeContext(message.chat.id, message.from.id)
     } else {
       activation.currentStateId = nextStateId

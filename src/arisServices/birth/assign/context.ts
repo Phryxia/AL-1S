@@ -1,5 +1,5 @@
 import { Temporal } from '@js-temporal/polyfill'
-import type { ArisContext, ArisContextState } from '@src/types/context'
+import { ArisContext, TERMINATE_STATE_ID } from '@src/types/context'
 import { parseDate } from '@src/utilities/date'
 
 const enum BirthAssignStateName {
@@ -52,7 +52,7 @@ export function createBirthAssignContext(): ArisContext<BirthAssignStore> {
         stateName: 'ask-date',
         transitions: [
           {
-            toId: -1,
+            toId: TERMINATE_STATE_ID,
             shouldBeTriggered: (message) => {
               try {
                 parseDate(message.text ?? '')
