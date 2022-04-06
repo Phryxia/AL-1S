@@ -1,19 +1,20 @@
-import type TelegramBot from 'node-telegram-bot-api'
-import { ArisResponse } from '@src/types/arisResponse'
+import { ArisResponse, ArisUserRequest } from '@src/types/arisResponse'
 
 export interface ArisContextTransition {
-  shouldBeTriggered(message: TelegramBot.Message): boolean
-  onTransition(message: TelegramBot.Message): ArisResponse
+  shouldBeTriggered(message: ArisUserRequest): boolean
+  onTransition(message: ArisUserRequest): ArisResponse
   toId: number
 }
 
 export interface ArisContextState {
+  stateName: string
   transitions: ArisContextTransition[]
-  defaultTransition: Exclude<ArisContextTransition, 'shouldBeTriggered'>
+  defaultTransition: Omit<ArisContextTransition, 'shouldBeTriggered'>
 }
 
 // 시작 상태는 반드시 0번
-export interface ArisContext {
+export interface ArisContext<T = {}> {
   contextName: string
   states: ArisContextState[]
+  store: T
 }
