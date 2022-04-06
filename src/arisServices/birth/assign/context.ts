@@ -12,14 +12,12 @@ export interface BirthAssignStore {
   date: Temporal.PlainDate
 }
 
-const INITIAL_STORE: BirthAssignStore = {
-  name: '',
-  date: Temporal.Now.plainDateISO(),
-}
+export function createBirthAssignContext(): ArisContext<BirthAssignStore> {
+  const store: BirthAssignStore = {
+    name: '',
+    date: Temporal.Now.plainDateISO(),
+  }
 
-export function createBirthAssignContext(
-  store: BirthAssignStore = { ...INITIAL_STORE },
-): ArisContext<BirthAssignStore> {
   return {
     contextName: 'birth-assign-context',
     store,
