@@ -1,8 +1,7 @@
-import { ArisResponse } from '@src/types/arisResponse'
-import TelegramBot from 'node-telegram-bot-api'
+import { ArisResponse, ArisUserRequest } from '@src/types/arisResponse'
 
 export interface TextRouterContext {
-  message: TelegramBot.Message
+  message: ArisUserRequest
   tokens: string[]
   currentIndex: number
   currentToken: string

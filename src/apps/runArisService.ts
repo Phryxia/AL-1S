@@ -1,27 +1,38 @@
-import type TelegramBot from 'node-telegram-bot-api'
 import ArisServices from '@src/arisServices'
-import { ArisResponse } from '@src/types/arisResponse'
-import { ArisContext } from '@src/types/context'
+import { ArisChatId, ArisResponse, ArisUserId, ArisUserRequest } from '@src/types/arisResponse'
+import { ArisContext, TERMINATE_STATE_ID } from '@src/types/context'
 import { routeMessage } from './routeMessage'
 
 // 유저가 물고있는 컨텍스트에 관련된 정보
 interface ContextActivation {
-  chatId: TelegramBot.ChatId
-  userId: TelegramBot.User['id']
-  context: ArisContext
+  chatId: ArisChatId
+  userId: ArisUserId
+  context: ArisContext<unknown>
   currentStateId: number
 }
 
-const activatedContexts: ContextActivation[] = []
+let activatedContexts: ContextActivation[] = []
 
-function isUserMessage(message: TelegramBot.Message): boolean {
-  return !!message.from && !message.from.is_bot
+export function addContext<T>(
+  chatId: ArisChatId,
+  userId: ArisUserId,
+  context: ArisContext<T>,
+): void {
+  activatedContexts.push({
+    chatId,
+    userId,
+    context,
+    currentStateId: 0,
+  })
 }
 
-function processContext(
-  message: TelegramBot.Message,
-  activation: ContextActivation,
-): ArisResponse {
+function removeContext(targetChatId: ArisChatId, targetUserId: ArisUserId): void {
+  activatedContexts = activatedContexts.filter(
+    ({ chatId, userId }) => !(chatId === targetChatId && userId === targetUserId),
+  )
+}
+
+function processContext(message: ArisUserRequest, activation: ContextActivation): ArisResponse {
   const currentState = activation.context.states[activation.currentStateId]
 
   const availableTransition = currentState.transitions.find((transition) =>
@@ -29,23 +40,29 @@ function processContext(
   )
 
   if (availableTransition) {
+    const nextStateId = availableTransition.toId
+
+    if (nextStateId === TERMINATE_STATE_ID) {
+      removeContext(message.chat.id, message.from.id)
+    } else {
+      activation.currentStateId = nextStateId
+    }
     return availableTransition.onTransition(message)
   }
   return currentState.defaultTransition.onTransition(message)
 }
 
-function findActivatedContext(message: TelegramBot.Message): ContextActivation | undefined {
+function findActivatedContext(message: ArisUserRequest): ContextActivation | undefined {
   return activatedContexts.find(
-    ({ chatId, userId }) => chatId === message.chat.id && userId === message.from?.id,
+    ({ chatId, userId }) => chatId === message.chat.id && userId === message.from.id,
   )
 }
 
-export async function runArisService(message: TelegramBot.Message): Promise<ArisResponse> {
-  if (!isUserMessage(message)) return null
-
+export async function runArisService(message: ArisUserRequest): Promise<ArisResponse> {
   const activatedContext = findActivatedContext(message)
 
   if (activatedContext) {
+    console.log(activatedContext)
     return processContext(message, activatedContext)
   }
 

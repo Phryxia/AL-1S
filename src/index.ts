@@ -1,3 +1,8 @@
+// polyfill
+import { toTemporalInstant } from '@js-temporal/polyfill'
+// @ts-ignore
+Date.prototype.toTemporalInstant = toTemporalInstant
+
 import express from 'express'
 import TelegramBotService from './service/telegram'
 import type { Request, Response, NextFunction } from 'express'
