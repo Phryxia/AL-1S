@@ -1,15 +1,6 @@
 import type { TextRouterConfig, TextRouterContext } from '@src/apps/routeMessage'
 import { addContext } from '@src/apps/runArisService'
-// import * as FriendDAO from '@src/service/dao/friend'
 import { createBirthAssignContext } from './context'
-
-// async function assignBirth(name: string, birthday: Date): Promise<void> {
-//   FriendDAO.addFriend({
-//     name,
-//     birthday,
-//     waifus: [],
-//   })
-// }
 
 const config: TextRouterConfig = {
   rules: [],
