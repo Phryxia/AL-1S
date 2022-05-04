@@ -33,7 +33,7 @@ app.listen(port, () => {
 })
 ;(async () => {
   try {
-    await getDb()
+    // await getDb()
     TelegramBotService.init()
   } catch (e) {
     console.error(e)
