@@ -1,11 +1,5 @@
 import { Temporal } from '@js-temporal/polyfill'
-
-type Birth = {
-  chatId: number
-  name: string
-  birthday: Temporal.PlainDate
-  waifus: any[]
-}
+import { Birth } from '@src/types'
 
 type RefinedBirth = Birth & {
   remainDays: number
