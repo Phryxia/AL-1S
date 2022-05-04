@@ -1,4 +1,5 @@
 import { Temporal } from '@js-temporal/polyfill'
+import { DummyBirths } from '@src/constants'
 import { Birth } from '@src/types'
 
 type RefinedBirth = Birth & {
@@ -17,41 +18,11 @@ function getRemainDays(baseDay: Temporal.PlainDate, birthday: Temporal.PlainDate
   }
   return duration.days
 }
-
-// const compareBirthday
-
-// NOTE: 실제 db에 넣는걸 미루기로..
-const births: Birth[] = [
-  {
-    chatId: -785108618,
-    name: '최종근',
-    birthday: Temporal.PlainDate.from('1995-06-13'),
-    waifus: [],
-  },
-  {
-    chatId: -785108618,
-    name: '권세규',
-    birthday: Temporal.PlainDate.from('1994-05-07'),
-    waifus: [],
-  },
-  {
-    chatId: -785108618,
-    name: '아리스',
-    birthday: Temporal.PlainDate.from('1994-03-25'),
-    waifus: [],
-  },
-  {
-    chatId: 50913950,
-    name: '권세규(개인)',
-    birthday: Temporal.PlainDate.from('1994-05-07'),
-    waifus: [],
-  },
-]
-
 export async function getBirthListMessageByChatId(chatId: number): Promise<string> {
   // db에서 찾는걸 모의함
-  const refinedBirthList: RefinedBirth[] = births
-    .filter((birth) => birth.chatId === chatId)
+  const refinedBirthList: RefinedBirth[] = DummyBirths.filter(
+    (birth) => birth.chatId === chatId,
+  )
     .map((birth) => {
       const remainDays = getRemainDays(Temporal.Now.plainDateISO(), birth.birthday)
       return {
