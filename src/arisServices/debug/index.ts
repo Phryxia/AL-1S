@@ -4,7 +4,17 @@ const config: TextRouterConfig = {
   rules: [],
   onMatchedCompletly: async (context: TextRouterContext) => {
     return {
-      text: `아리스는 "${context.message.text}"를 들었습니다.`,
+      text: `아리스는
+      
+      
+      
+      
+      여긴 되잖아
+      
+      
+      
+      
+      "${context.message.text}"를 들었습니다.`,
     }
   },
 }
