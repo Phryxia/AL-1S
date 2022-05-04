@@ -15,8 +15,9 @@ type RefinedBirth = {
 
 // 생일까지 남은 날짜를 계산하는 함수
 const getRemainDays = (baseDay: Temporal.PlainDate, birthday: Temporal.PlainDate) => {
-  baseDay = baseDay.with({ year: 1970 })
-  birthday = birthday.with({ year: 1970 })
+  const currentYear = Temporal.Now.PlainDate('iso8601').year
+  baseDay = baseDay.with({ year: currentYear  })
+  birthday = birthday.with({ year: currentYear })
 
   const duration = baseDay.until(birthday)
   if (duration.sign === -1) {
